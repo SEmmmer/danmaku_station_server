@@ -3,6 +3,8 @@
 import asyncio
 
 import blivedm
+import datetime
+import os
 
 
 class MyBLiveClient(blivedm.BLiveClient):
@@ -13,23 +15,23 @@ class MyBLiveClient(blivedm.BLiveClient):
         print(f'当前人气值：{popularity}')
 
     async def _on_receive_danmaku(self, danmaku: blivedm.DanmakuMessage):
+        the_time = str(datetime.datetime.now()).split(" ", 1)
+        filename = 'danmaku_files/' + the_time[0] + '.txt'
         if danmaku.user_level > 5:
             if danmaku.msg_type == 0:
-                print(f'{danmaku.timestamp}:{danmaku.uid}:{danmaku.msg}')
+                danmaku_content = f'{danmaku.timestamp}:{danmaku.uid}:{danmaku.msg}\n'
+                with open(filename, "a+") as code:
+                    code.write(danmaku_content)
+                    code.close()
+                    print(f'{danmaku.timestamp}:{danmaku.uid}:{danmaku.msg}')
 
 
 async def main():
     # 参数1是直播间ID
     # 如果SSL验证失败就把ssl设为False
-    client = MyBLiveClient(13550856, ssl=True)
+    client = MyBLiveClient(21613730, ssl=True)
     future = client.start()
     try:
-        # 5秒后停止，测试用
-        # await asyncio.sleep(5)
-        # future = client.stop()
-        # 或者
-        # future.cancel()
-
         await future
     finally:
         await client.close()
