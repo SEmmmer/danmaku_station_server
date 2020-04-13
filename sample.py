@@ -29,7 +29,7 @@ class MyBLiveClient(blivedm.BLiveClient):
 async def main():
     # 参数1是直播间ID
     # 如果SSL验证失败就把ssl设为False
-    client = MyBLiveClient(21613730, ssl=True)
+    client = MyBLiveClient(11588230, ssl=True)
     future = client.start()
     try:
         await future
